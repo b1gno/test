@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizzeria</title>
+    <link rel="stylesheet" href="pizza.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let data2 = new Date();
+            let ora = data2.getHours();
+
+            if (ora > 9 && ora < 18) {
+                document.body.style.backgroundColor = 'DarkOliveGreen';
+            }
+            else{
+                document.body.style.backgroundColor = 'Honeydew';
+            } 
+        });
+    </script>
+</head>
+<body>
+
+<div class="Pizzeria">
+    <h2>Pizzeria</h2>
+    <select id="prodotto">
+        <option value="margherita">Margherita</option>
+        <option value="napoli">Napoli</option>
+        <option value="quattroStagioni">Quattro Stagioni</option>
+    </select>
+    <br><br>
+    <input type="number" id="quantita" placeholder="Inserire la quantità">
+    <br><br>
+    <button id="seleziona">Seleziona</button>
+    <button id="cancella">Cancella</button>
+    <br><br>
+    <div id="prodotti_singoli"></div>
+    <div id="totale"></div>
+    <div id="totale_scontato"></div>
+</div>
+
+    <script>
+        let prodotti = [
+        ];
+
+        function inserisci(){
+            let prodotto = document.getElementById("prodotto").value;
+            let quantita = document.getElementById("quantita").value;
+
+            switch (prodotto) {
+                case "margherita":
+                    prezzo_prodotto = 5;
+                    break;
+                case "napoli":
+                    prezzo_prodotto = 6;
+                    break;
+                case "quattroStagioni":
+                    prezzo_prodotto = 7;
+                    break;
+            }
+
+            let pizza = {};
+            pizza.prodotto = prodotto;
+            pizza.prezzo_prodotto = prezzo_prodotto;
+            pizza.quantita = quantita;
+
+            if (isNaN(quantita) || quantita <= 0) {
+                document.getElementById("totale").innerHTML = `Inserisci una quantità valida` 
+                return;
+            }
+
+            prodotti.push(pizza);
+        }
+
+        document.getElementById("seleziona").addEventListener("click", function() {
+            inserisci()
+            let totale = 0
+            let totale_scontato = 0
+
+            let data = new Date();
+            let giorno = data.getDay();
+            let mese = data.getMonth();
+            let anno = data.getFullYear();
+            
+
+            document.getElementById("prodotti_singoli").innerHTML = ``
+            document.getElementById("totale_scontato").innerHTML = ``
+
+            for(let j=0; j<prodotti.length; j++){
+                document.getElementById("prodotti_singoli").innerHTML += `prodotto: ${prodotti[j].prodotto}, prezzo: ${prodotti[j].prezzo_prodotto}, quantita: ${prodotti[j].quantita}, sub:${prodotti[j].prezzo_prodotto*prodotti[j].quantita}<br>` 
+            }
+
+            for(let i=0; i<prodotti.length; i++){
+                totale += prodotti[i].prezzo_prodotto * prodotti[i].quantita
+            }
+
+            document.getElementById("totale").innerHTML = `Totale senza sconto = ${totale}€` 
+
+            if (giorno == 25 && mese == 11 && anno == 2024) {
+                totale_scontato = totale - 82*(totale/100)
+                document.getElementById("totale_scontato").innerHTML = `Totale con sconto BLACK FRIDAY = ${totale_scontato.toFixed(2)}€` 
+            }
+            else if (totale > 40) {
+                totale_scontato = totale - 52*(totale/100)
+                document.getElementById("totale_scontato").innerHTML = `Totale con sconto = ${totale_scontato.toFixed(2)}€` 
+            }
+        });
+
+        document.getElementById("cancella").addEventListener("click", function() {
+            document.getElementById("totale").innerHTML = `` 
+            document.getElementById("prodotti_singoli").innerHTML = ``
+            document.getElementById("totale_scontato").innerHTML = `` 
+
+            prodotti.splice(0, prodotti.length)
+        });
+
+</script>
+
+</body>
+
+</html>
+
+    </script>
+
+</body>
+</html>
